@@ -1,0 +1,29 @@
+{
+  "name": "vite-plugin-bundle",
+  "version": "0.1.0",
+  "keywords": [
+    "vite",
+    "bundle",
+    "helpers"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "yarn build"
+  },
+  "repository": "https://github.com/mathe42/vite-plugin-bundle.git",
+  "author": "Sebastian Krüger <2pi_r2@gmx.de>",
+  "license": "MIT",
+  "peerDependencies": {
+    "vite": "^2.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.7.4",
+    "typescript": "^4.4.2",
+    "vite": "^2.5.1"
+  },
+  "dependencies": {
+    "magic-string": "^0.25.7"
+  }
+}
