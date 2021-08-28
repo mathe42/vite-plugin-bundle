@@ -56,7 +56,8 @@ export async function bundle(
   ctx: string,
   result_type: "iife" | "module" = "module",
   inline = false,
-  watch_files = false
+  watch_files = false,
+  static_file: string | false = false
 ): Promise<string> {
   if (isBuild && watch_files) {
     throw new Error("At build you can not watch files!");
@@ -106,7 +107,9 @@ export async function bundle(
     if (watch_files) {
       const cacheDir = join(config.cacheDir!, ".bundle.iife");
       if (!existsSync(cacheDir)) mkdirSync(cacheDir);
-      const fileName = getAssetHash(Buffer.from(entry + ctx)) + ".iife.js";
+      const fileName = static_file
+        ? static_file
+        : getAssetHash(Buffer.from(entry + ctx)) + ".iife.js";
       const outFile = join(cacheDir, fileName);
 
       const watcher = watch({ ...rollup_config, output: { file: outFile } });
@@ -152,20 +155,28 @@ export async function bundle(
           return `(window.URL || window.webkitURL).createObjectURL(${blob})`;
         }
 
-        const pathSplit = entry.split("?")[0].split(/\/|\\/g);
-        const fileSplit = pathSplit[pathSplit.length - 1].split(".");
-        const basename = fileSplit.slice(0, fileSplit.length - 1).join(".");
-        const contentHash = getAssetHash(content);
-        const fileName = join(
-          config.build.assetsDir,
-          `${basename}.${contentHash}.js`
-        );
-        // get real URL variable
-        return `'__VITE_ASSET__${pluginContext.emitFile({
-          fileName,
-          type: "asset",
-          source: code,
-        })}__'`;
+        if (!static_file) {
+          const pathSplit = entry.split("?")[0].split(/\/|\\/g);
+          const fileSplit = pathSplit[pathSplit.length - 1].split(".");
+          const basename = fileSplit.slice(0, fileSplit.length - 1).join(".");
+          const contentHash = getAssetHash(content);
+          const fileName = join(
+            config.build.assetsDir,
+            `${basename}.${contentHash}.js`
+          );
+          // get real URL variable
+          return `'__VITE_ASSET__${pluginContext.emitFile({
+            fileName,
+            type: "asset",
+            source: code,
+          })}__'`;
+        } else {
+          return `'__VITE_ASSET__${pluginContext.emitFile({
+            fileName: static_file,
+            type: "asset",
+            source: code,
+          })}__'`;
+        }
       } catch (ex) {
         await bundle.close();
         throw ex;
