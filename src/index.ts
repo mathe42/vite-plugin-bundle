@@ -7,7 +7,8 @@ import {
   watch,
   RollupWatcher,
 } from "rollup";
-import { join } from "path/posix";
+import { posix as path } from "path";
+const { join } = path;
 import { createHash } from "crypto";
 import { existsSync, mkdirSync, readFileSync } from "fs";
 
