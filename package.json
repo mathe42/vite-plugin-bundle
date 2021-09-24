@@ -23,7 +23,7 @@
     "@types/node": "16.7.4",
     "tsup": "5.1.0",
     "typescript": "4.4.3",
-    "vite": "2.5.1"
+    "vite": "2.5.10"
   },
   "dependencies": {
     "magic-string": "^0.25.7"
