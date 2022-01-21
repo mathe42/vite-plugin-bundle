@@ -45,6 +45,9 @@ const plugin: Plugin = {
   },
 };
 
+let removeString =
+  'export function __vite_legacy_guard(){import("data:text/javascript,")}';
+
 export default function bundleHelper(): Plugin {
   return plugin;
 }
@@ -94,6 +97,31 @@ export async function bundle(
       plugins: [
         ...config.plugins.filter((v) => inContext(v, ctx)),
         // LAST PLUGIN IS CUSTOM!
+        {
+          name: "fix-legacy-plugin-iife",
+          renderChunk(code, chunk) {
+            if (chunk.isEntry) {
+              const [before, after] = code.split(removeString);
+
+              let startpos = before.length;
+
+              if (after) {
+                const nCode = new MagicString(code);
+
+                nCode.overwrite(
+                  startpos + 1,
+                  startpos + removeString.length,
+                  ""
+                );
+
+                return {
+                  code: nCode.toString(),
+                  map: nCode.generateMap({ hires: false }),
+                };
+              }
+            }
+          },
+        },
         {
           name: "extra-file-loader",
           load(id) {
