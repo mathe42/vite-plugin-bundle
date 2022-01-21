@@ -108,11 +108,7 @@ export async function bundle(
               if (after) {
                 const nCode = new MagicString(code);
 
-                nCode.overwrite(
-                  startpos + 1,
-                  startpos + removeString.length,
-                  ""
-                );
+                nCode.overwrite(startpos, startpos + removeString.length, "");
 
                 return {
                   code: nCode.toString(),
