@@ -21,7 +21,7 @@
     "vite": "^2.5.1"
   },
   "devDependencies": {
-    "@types/node": "16.11.21",
+    "@types/node": "16.11.28",
     "tsup": "5.11.11",
     "typescript": "4.5.5",
     "vite": "2.5.10"
